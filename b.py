@@ -8,12 +8,17 @@ import sys
 import threading
 import RPi.GPIO
 import jhd1802 # another lcd library
+import log
 
 led_state = "ON"
 led = 5
 app = Flask(__name__)
 threshold_value = 1500
 sensor_values = [0,0,0,0,0]
+def log_on():
+    while True:
+        time.sleep(1)
+        log.write_to_csv('dino.csv',sum(sensor_values))
 def sensor_on():
     while True:
         time.sleep(0.2)
@@ -109,6 +114,10 @@ if __name__ == '__main__':
     thread4 = threading.Thread(target=lcd_light_on)
     thread4.daemon = True
     thread4.start()
+    thread5 = threading.Thread(target=log_on)
+    thread5.daemon = True
+    thread5.start()
+
     app.run(debug=True, host='0.0.0.0')
 
 
