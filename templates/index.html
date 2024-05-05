@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+    <title>Shhhhhhhh</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            // Function to update LED state and noise level in real-time
+            function updateData() {
+                // Update LED state
+                $.get("/update_led_state", function(data) {
+                    $("#led_status").text(data.led_status);
+                });
+
+                // Update noise level
+                $.get("/get_noise_level", function(data) {
+                    $("#noise_level").text(data.noise_level);
+                });
+            }
+
+            // Update data every 1 second
+            setInterval(updateData, 1000);
+
+            // Function to handle threshold slider change
+            $("#threshold_slider").change(function() {
+                var thresholdValue = $(this).val();
+                $("#threshold_value").text(thresholdValue);
+                $.post("/", { threshold: thresholdValue });
+            });
+        });
+    </script>
+</head>
+<body>
+    <h1>LED Status: <span id="led_status">OFF</span></h1>
+    <h2>Noise Level: <span id="noise_level">0</span></h2>
+    <input type="range" min="0" max="2500" value="1500" class="slider" id="threshold_slider">
+    <p>Threshold Value: <span id="threshold_value">1500</span></p>
+</body>
+</html>
+

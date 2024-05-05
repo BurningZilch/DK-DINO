@@ -1,0 +1,25 @@
+/* main.css */
+body {
+    background: Linen;
+    margin-top: 50px;
+    margin-left: 100px;
+}
+h1 {
+    font-family: Verdana, Geneva, sans-serif;
+    font-size: 2.5em;
+    color: FireBrick;
+}
+p {
+    font-family: Georgia, serif;
+    /* Add more styles as needed */
+}
+.button {
+  background-color: #04AA6D; /* Green */
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+}
