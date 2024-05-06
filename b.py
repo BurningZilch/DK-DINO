@@ -9,6 +9,7 @@ import threading
 import RPi.GPIO
 import jhd1802 # another lcd library
 import log
+import oled
 
 led_state = "ON"
 led = 5
@@ -18,7 +19,7 @@ sensor_values = [0,0,0,0,0]
 def log_on():
     while True:
         time.sleep(1)
-        log.write_to_csv('dino.csv',sum(sensor_values))
+        log.write_to_csv('dino.csv',sum(sensor_values), led_state)
 def sensor_on():
     while True:
         time.sleep(0.2)
@@ -26,6 +27,21 @@ def sensor_on():
         sensor_values.append(s)
         sensor_values.pop(0)
 
+def oled_on():
+    face = oled.SH1107G_SSD1327()
+    face.backlight(False)
+    time.sleep(1)
+    face.backlight(True)
+    rows, cols = face.size()
+    print("OLED model: {}".format(face.name))
+    print("OLED type : {} x {}".format(cols, rows))
+    while True:
+        face.setCursor(0, 0)
+        face.write("DK is here")
+        time.sleep(2)
+        face.setCursor(rows - 1,0)
+        face.write(str(sum(sensor_values)))
+        time.sleep(2)
 def lcd_update():
         global led_state
         if get_noise_level() > threshold_value and led_state == "OFF":
@@ -99,24 +115,32 @@ def update_led_state():
     return jsonify({'led_status': s})
 
 if __name__ == '__main__':
-    lcd = jhd1802.JHD1802()
-    lcd.clear()
-    subprocess.call("ls", shell=True)
+#    lcd = jhd1802.JHD1802()
+#    lcd.clear()
+#    subprocess.call("ls", shell=True)
     thread1 = threading.Thread(target=sensor_on)
     thread1.daemon = True
     thread1.start()
-    thread2 = threading.Thread(target=lcd_on)
-    thread2.daemon = True
-    thread2.start()
+    print("sensor ready")
+#    thread2 = threading.Thread(target=lcd_on)
+#    thread2.daemon = True
+#    thread2.start()
     thread3 = threading.Thread(target=led_on)
     thread3.daemon = True
     thread3.start()
-    thread4 = threading.Thread(target=lcd_light_on)
-    thread4.daemon = True
-    thread4.start()
+    print("led ready")
+#    thread4 = threading.Thread(target=lcd_light_on)
+#    thread4.daemon = True
+#    thread4.start()
     thread5 = threading.Thread(target=log_on)
     thread5.daemon = True
     thread5.start()
+    print("log ready")
+    thread6 = threading.Thread(target=oled_on)
+    thread6.daemon = True
+    thread6.start()
+    print("oled ready")
+
 
     app.run(debug=True, host='0.0.0.0')
 

@@ -15,12 +15,12 @@ def update_global_variable():
         time.sleep(1)
 
 # Function to write the global variable value and current time to a CSV file
-def write_to_csv(filename,global_variable):
+def write_to_csv(filename,global_variable,state):
     current_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         # Write global variable value and current time to CSV file
     with open(filename, 'ab') as csvfile:  # Use 'ab' for Python 2.7
         writer = csv.writer(csvfile)
-        writer.writerow([current_time, global_variable])
+        writer.writerow([current_time, global_variable,state])
     time.sleep(1)
 
 # Main function to start threads
