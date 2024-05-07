@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+import oled
 # -*- coding: utf-8 -*-
 #
 # The MIT License (MIT)
@@ -149,12 +150,11 @@ class JHD1802(Display):
 
 def main():
     import time
-
     lcd = JHD1802()
     rows, cols = lcd.size()
     print("LCD model: {}".format(lcd.name))
     print("LCD type : {} x {}".format(cols, rows))
-
+ 
     lcd.backlight(False)
     time.sleep(1)
     lcd.backlight(True)
@@ -165,10 +165,31 @@ def main():
     lcd.setCursor(rows - 1, 0)
     for i in range(cols):
         lcd.write(chr(ord('A') + i))
-
+ 
     time.sleep(3)
     lcd.clear()
 
+    Oled = oled.SH1107G_SSD1327()
+    rows, cols = Oled.size()
+    print("OLED model: {}".format(Oled.name))
+    print("OLED type : {} x {}".format(cols, rows))
+
+    Oled.backlight(False)
+    time.sleep(1)
+
+    Oled.backlight(True)
+    Oled.setCursor(0, 0)
+    Oled.write("hello world!")
+    Oled.setCursor(0, cols - 1)
+    Oled.write('X')
+    Oled.setCursor(rows - 1, 0)
+    for i in range(cols):
+        Oled.write(chr(ord('A') + i))
+
+    time.sleep(3)
+    Oled.clear()
+
 if __name__ == '__main__':
-    main()
+    while True:
+        main()
 

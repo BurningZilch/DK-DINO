@@ -35,8 +35,11 @@ def oled_on():
     rows, cols = face.size()
     print("OLED model: {}".format(face.name))
     print("OLED type : {} x {}".format(cols, rows))
+    print("after clear")
     while True:
+        print("loop")
         face.setCursor(0, 0)
+        print("what")
         face.write("DK is here")
         time.sleep(2)
         face.setCursor(rows - 1,0)
@@ -54,6 +57,7 @@ def lcd_update():
             led_state = "OFF"
 
 def lcd_on(): 
+    lcd.clear()
     lcd.write("DK DINO ON")
     time.sleep(2)
     lcd.clear()
@@ -136,12 +140,10 @@ if __name__ == '__main__':
     thread5.daemon = True
     thread5.start()
     print("log ready")
-    thread6 = threading.Thread(target=oled_on)
-    thread6.daemon = True
-    thread6.start()
+#    thread6 = threading.Thread(target=oled_on)
+#    thread6.daemon = True
+#    thread6.start()
     print("oled ready")
-
-
     app.run(debug=True, host='0.0.0.0')
 
 
