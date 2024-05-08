@@ -20,6 +20,7 @@ allLedsExceptThis = 1
 thisLedAndInwards = 2
 thisLedAndOutwards = 3
 
+i = 7
 def init(numleds):
     grovepi.chainableRgbLed_init(pin, numleds)
     time.sleep(.5)
@@ -32,4 +33,7 @@ def set_all(color):
     grovepi.chainableRgbLed_test(pin, numleds, color)
     time.sleep(1)
 if __name__ == '__main__':
-    turnoff()
+    while i >= 0:
+        set_all(i)
+        i = i - 1
+        time.sleep(1)
