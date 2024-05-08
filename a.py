@@ -14,6 +14,8 @@ app = Flask(__name__)
 threshold = 1500
 sensor_values = [0,0,0,0,0]
 led_state = "ON"
+led = 7
+led_number = 2
 def lcd_on(): 
     lcd.clear()
     lcd.write("DK DINO ON")
