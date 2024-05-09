@@ -130,7 +130,7 @@ def lcd_light():
 
 def bonk():
     global current_hand
-    if led_state =="ON" and current == 0:
+    if led_state =="ON" and current_hand == 0:
         hand.setAngle(180)
         current_hand = 180
     else:

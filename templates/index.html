@@ -12,6 +12,25 @@
             -webkit-user-select: none;
             -ms-user-select: none;
         }
+        .title-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+        }
+        .threshold-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 20px; /* Added margin for spacing */
+        }
+        .threshold-container input {
+            width: 80%;
+            margin-right: 10px;
+        }
+        .threshold-value {
+            flex: 1;
+            text-align: right;
+        }
     </style>
     <script>
         $(document).ready(function(){
@@ -66,12 +85,17 @@
     </script>
 </head>
 <body>
-    <h1>LED Status: <span id="led_status">OFF</span></h1>
-    <h2>Noise Level: <span id="noise_level">0</span></h2>
+    <!-- Moved threshold container to the top -->
+    <div class="threshold-container">
+        <input type="range" min="0" max="2500" value="1500" class="slider" id="threshold_slider">
+        <p class="threshold-value">Threshold Value: <span id="threshold_value">1500</span></p>
+    </div>
+    <div class="title-container">
+        <h1>LED Status: <span id="led_status">OFF</span></h1>
+        <h2>Noise Level: <span id="noise_level">0</span></h2>
+    </div>
     <!-- Add canvas for the chart -->
     <canvas id="noiseChart" width="400" height="200"></canvas>
-    <input type="range" min="0" max="2500" value="1500" class="slider" id="threshold_slider">
-    <p>Threshold Value: <span id="threshold_value">1500</span></p>
 </body>
 </html>
 
