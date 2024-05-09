@@ -1,4 +1,5 @@
 import random
+import servo
 import led
 from oled import SH1107G_SSD1327
 import jhd1802
@@ -23,6 +24,7 @@ last_led_state = "ON"
 numleds = 2
 oled_screen = SH1107G_SSD1327()
 oled_refresh = 0
+current_hand = 0
 
 def log_on():
     log.write_to_csv('dino.csv',sum(sensor_values), led_state)
@@ -126,7 +128,17 @@ def lcd_light():
     else:
         lcd_color.setRGB(0)
 
+def bonk():
+    global current_hand
+    if led_state =="ON" and current == 0:
+        hand.setAngle(180)
+        current_hand = 180
+    else:
+        current_hand = current_hand - 60
+        hand.setAngle(current_hand)
+
 if __name__ == '__main__':
+    hand = servo.GroveServo(25)
     led.init()
     oled_screen.clear()
     oled_screen.backlight(True)
@@ -148,6 +160,9 @@ if __name__ == '__main__':
     callback_lcd.start()
     callback_lcdr = PeriodicCallback(lcd_light,2000)
     callback_lcdr.start()
+    callback_bonk = PeriodicCallback(bonk,1000)
+    callback_bonk.start()
+
 
 
     IOLoop.instance().start()
