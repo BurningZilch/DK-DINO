@@ -18,8 +18,8 @@ DISPLAY_TEXT_ADDR = 0x3e
 
 # set backlight to (R,G,B) (values from 0..255 for each)
 def setRGB(r):
-    bus.write_byte_data(DISPLAY_RGB_ADDR,0,0)
-    bus.write_byte_data(DISPLAY_RGB_ADDR,1,0)
+   # bus.write_byte_data(DISPLAY_RGB_ADDR,0,0)
+   # bus.write_byte_data(DISPLAY_RGB_ADDR,1,0)
     bus.write_byte_data(DISPLAY_RGB_ADDR,0x08,0xaa)
     
 

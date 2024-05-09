@@ -104,6 +104,12 @@ def led_control():
     else:
         led.set_all(0)
 
+def lcd_update():
+    lcd.setCursor(0,0)
+    lcd.write("disco dino!!")
+    lcd.setCursor(1,0)
+    lcd.write(str(get_noise_level()))
+
 def oled_update():
     global oled_refresh
     oled_screen.setCursor(0,0)
@@ -113,11 +119,19 @@ def oled_update():
     oled_refresh = oled_refresh + 1 
     oled_screen.setCursor(rows - 2, 0)
     oled_screen.write(str(oled_refresh))
+
+def lcd_light():
+    if led_state == "ON":
+        lcd_color.setRGB(255)
+    else:
+        lcd_color.setRGB(0)
+
 if __name__ == '__main__':
     led.init()
     oled_screen.clear()
     oled_screen.backlight(True)
     rows, cols = oled_screen.size()
+    lcd = jhd1802.JHD1802()
     http_server = HTTPServer(WSGIContainer(app))
     http_server.listen(5000, address='0.0.0.0')  # Listen on all available network interfaces
     callback_sensor = PeriodicCallback(sensor_on, 200)  # 1000 milliseconds = 1 second
@@ -130,5 +144,11 @@ if __name__ == '__main__':
     callback_led_control.start()
     callback_oled = PeriodicCallback(oled_update,2000)
     callback_oled.start()
+    callback_lcd = PeriodicCallback(lcd_update,2000)
+    callback_lcd.start()
+    callback_lcdr = PeriodicCallback(lcd_light,2000)
+    callback_lcdr.start()
+
+
     IOLoop.instance().start()
 
