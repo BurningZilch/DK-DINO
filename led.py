@@ -2,7 +2,7 @@ import time
 import grovepi
 
 pin = 7
-numleds = 2
+numleds = 3
 
 grovepi.pinMode(pin,"OUTPUT")
 # test colors used in grovepi.chainableRgbLed_test()
@@ -20,7 +20,7 @@ allLedsExceptThis = 1
 thisLedAndInwards = 2
 thisLedAndOutwards = 3
 
-s = 7
+s = 8
 def init():
     grovepi.chainableRgbLed_init(pin, numleds)
     time.sleep(.5)
@@ -40,11 +40,13 @@ def set_color(i,num):
         color = [255, 255, 0]  # Yellow
     elif i == 7:
         color = [255, 255, 255]  # White
+    elif i == 8: #orange
+        color = [255,75,0]
     else:
         color = [0, 0, 0]  # Black (default)  
     grovepi.storeColor(color[0],color[1],color[2])
     time.sleep(.5)
-    grovepi.chainableRgbLed_pattern(pin, num,0)
+    grovepi.chainableRgbLed_pattern(pin, 0,num)
 def set_all(color):
     grovepi.chainableRgbLed_test(pin, numleds, color)
     time.sleep(.5)
