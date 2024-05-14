@@ -99,8 +99,8 @@ def led_state_update():
     global led_state2
     global led_state3
     led_state = get_led_state(threshold_value)
-    led_state2 = get_led_state(threshold_value + 200)
-    led_state3 = get_led_state(threshold_value + 400)
+    led_state2 = get_led_state(threshold_value + 50)
+    led_state3 = get_led_state(threshold_value + 100)
 
 def led_control():
     i = 0
