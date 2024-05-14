@@ -1,7 +1,7 @@
 import time
 import grovepi
 
-pin = 7
+pin = 3
 numleds = 3
 
 grovepi.pinMode(pin,"OUTPUT")
