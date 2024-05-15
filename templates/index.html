@@ -64,13 +64,22 @@
                 });
 
                 // Update noise level and chart
-                $.get("/get_noise_level", function(data) {
-                    $("#noise_level").text(data.noise_level);
-                    chart.data.labels.push(new Date().toLocaleTimeString());
-                    chart.data.datasets[0].data.push(data.noise_level);
-                    chart.update();
-                });
-            }
+    $.get("/get_noise_level", function(data) {
+        $("#noise_level").text(data.noise_level);
+
+        // Push data into chart only if the number of values is less than or equal to 60
+        if (chart.data.labels.length <= 60) {
+            chart.data.labels.push(new Date().toLocaleTimeString());
+            chart.data.datasets[0].data.push(data.noise_level);
+        } else {
+            // If more than 20 values, shift the first value out and push the new one
+            chart.data.labels.shift();
+            chart.data.datasets[0].data.shift();
+            chart.data.labels.push(new Date().toLocaleTimeString());
+            chart.data.datasets[0].data.push(data.noise_level);
+        }
+        chart.update();
+    });           }
 
             // Update data every 1 second
             setInterval(updateData, 1000);
@@ -87,8 +96,8 @@
 <body>
     <!-- Moved threshold container to the top -->
     <div class="threshold-container">
-        <input type="range" min="0" max="2500" value="1500" class="slider" id="threshold_slider">
-        <p class="threshold-value">Threshold Value: <span id="threshold_value">1500</span></p>
+        <input type="range" min="0" max="2000" value="1000" class="slider" id="threshold_slider">
+        <p class="threshold-value">Threshold Value: <span id="threshold_value">1000</span></p>
     </div>
     <div class="title-container">
         <h1>LED Status: <span id="led_status">OFF</span></h1>

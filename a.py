@@ -1,10 +1,7 @@
 import random
-import servo
 import led
 from oled import SH1107G_SSD1327
-import jhd1802
 import time
-import lcd_color
 import sound
 import time
 from flask import Flask, render_template, request, jsonify
@@ -15,9 +12,10 @@ import subprocess
 from tornado.wsgi import WSGIContainer
 from tornado.httpserver import HTTPServer
 from tornado.ioloop import IOLoop, PeriodicCallback
+import ip
 
 app = Flask(__name__)
-threshold_value = 1500
+threshold_value = 1000 
 sensor_values = [0,0,0,0,0]
 led_state = "ON"
 led_state2 = "ON"
@@ -27,9 +25,14 @@ numleds = 3
 oled_screen = SH1107G_SSD1327()
 oled_refresh = 0
 current_hand = 0
-
+address = 'reboot pls'
+try:
+    address = ip.get_ip_address('wlan0')
+except:
+    print('wasd')
 def log_on():
     log.write_to_csv('dino.csv',sum(sensor_values), led_state)
+
 @app.route('/')
 def index():
     return render_template('index.html', threshold=threshold_value)
@@ -99,8 +102,8 @@ def led_state_update():
     global led_state2
     global led_state3
     led_state = get_led_state(threshold_value)
-    led_state2 = get_led_state(threshold_value + 50)
-    led_state3 = get_led_state(threshold_value + 100)
+    led_state2 = get_led_state(threshold_value + 150)
+    led_state3 = get_led_state(threshold_value + 300)
 
 def led_control():
     i = 0
@@ -133,11 +136,12 @@ def oled_update():
     oled_screen.setCursor(0,0)
     oled_screen.write("Disco Dino!!")
     oled_screen.setCursor(rows - 1, 0)
-    oled_screen.write('noise value :'+str(sum(sensor_values)))
+    oled_screen.write('noise value:'+str(sum(sensor_values)))
     oled_refresh = oled_refresh + 1 
     oled_screen.setCursor(rows - 5, 0)
-    oled_screen.write('threshold :'  +str(threshold_value))
-
+    oled_screen.write('threshold:'  +str(threshold_value))
+    oled_screen.setCursor(rows - 10, 0)
+    oled_screen.write(address)
 def lcd_light():
     pass
   #  if led_state == "ON":
@@ -155,11 +159,11 @@ def bonk():
         hand.setAngle(current_hand)
 
 if __name__ == '__main__':
-    hand = servo.GroveServo(25)
     led.init()
     oled_screen.clear()
     oled_screen.backlight(True)
     rows, cols = oled_screen.size()
+    oled_screen.write('booting')
 #    lcd = jhd1802.JHD1802()
     http_server = HTTPServer(WSGIContainer(app))
     http_server.listen(5000, address='0.0.0.0')  # Listen on all available network interfaces
