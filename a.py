@@ -13,6 +13,7 @@ from tornado.wsgi import WSGIContainer
 from tornado.httpserver import HTTPServer
 from tornado.ioloop import IOLoop, PeriodicCallback
 import ip
+from gpiozero import CPUTemperature
 
 app = Flask(__name__)
 threshold_value = 1000 
@@ -142,6 +143,8 @@ def oled_update():
     oled_screen.write('threshold:'  +str(threshold_value))
     oled_screen.setCursor(rows - 10, 0)
     oled_screen.write(address)
+    oled_screen.setCursor(rows - 7, 0)
+    oled_screen.write(str(CPUTemperature())[-17:-1])
 def lcd_light():
     pass
   #  if led_state == "ON":
