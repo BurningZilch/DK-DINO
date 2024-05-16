@@ -25,7 +25,9 @@ sensor_values = [0,0,0,0,0]
 led_state = "ON"
 led_state2 = "ON"
 led_state3 = "ON"
-last_led_state = "ON"
+last_led_state = "OFF"
+last_led_state2 = "OFF"
+last_led_state3 = "OFF"
 numleds = 3
 oled_screen = SH1107G_SSD1327()
 current_hand = 0
@@ -105,23 +107,38 @@ def led_state_update():
     led_state3 = get_led_state(threshold_value + 300)
 
 def led_control():
-    i = 0
+    global last_led_state
+    global last_led_state2
+    global last_led_state3
     if led_state == "ON":
-        led.set_color(6,0)
+        if last_led_state == "OFF":
+            led.set_color(6,0)
+        last_led_state = "ON"
     else:
-        led.set_color(0,0)
+        if last_led_state == "ON":
+            led.set_color(0,0)
+        last_led_state = "OFF"
     if led_state2 == "ON":
-        led.set_color(8,1)
+        print last_led_state2
+        if last_led_state2 == "OFF":
+            led.set_color(8,1)
+        last_led_state2 = "ON"
     else:
-        led.set_color(0,1)
+        if last_led_state2 == "ON":
+            led.set_color(0,1)
+        last_led_state2 = "OFF"
+    
+    
     if led_state3 == "ON":
-        led.set_color(4,2)
+        if last_led_state3 == "OFF":
+            led.set_color(4,2)
+        last_led_state3 = "ON"
     else:
-        led.set_color(0,2)
-
-    #    while i < numleds:
-    #        led.set_color(random.randint(1,7),i)
-    #        i = i + 1
+        if last_led_state3 == "ON":
+            led.set_color(0,2)
+        last_led_state3 = "OFF"
+    
+    
 
 def lcd_update():
     pass
@@ -134,6 +151,8 @@ def oled_update():
     canva_oled.write('noise: '+str(sum(sensor_values)),0,0,1,canva)
     canva_oled.write('threshold: '+ str(threshold_value),0,1,1,canva)
     canva_oled.write(str(CPUTemperature())[-17:-1],0,2,1,canva)
+    #TODO
+    #add a line chart here
     canva_oled.frame(oled_screen,canva,last_canva)
    # oled_screen.setCursor(0,0)
    # oled_screen.write("Disco Dino!!")
@@ -166,6 +185,8 @@ if __name__ == '__main__':
     rows, cols = oled_screen.size()
     canva_oled.fullscreen_image('logo.bmp',canva)
     canva_oled.frame(oled_screen,canva, last_canva)
+    time.sleep(3)
+    canva = np.zeros_like(canva)
 #    lcd = jhd1802.JHD1802()
     http_server = HTTPServer(WSGIContainer(app))
     http_server.listen(5000, address='0.0.0.0')  # Listen on all available network interfaces
