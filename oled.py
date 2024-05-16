@@ -195,7 +195,6 @@ class SH1107G_SSD1327(Display):
         blk.append(0x00)
         blk.append(0x10)
         self._cmds(blk)
-        print(blk)
         self.clear()
 
     def _cmd(self, cmd):
