@@ -147,11 +147,14 @@ def lcd_update():
   #  lcd.write(str(get_noise_level()))
 
 def oled_update():
-    canva_oled.write('noise: '+str(sum(sensor_values)),0,0,1,canva)
-    canva_oled.write('threshold: '+ str(threshold_value),0,1,1,canva)
+    global canva
+    c = get_noise_level()
+    bar_height = min(int(remap(c,min(sensor_values)*5,max(sensor_values)*5, 0, 100)),100)#TODO
+    canva = np.roll(canva, -1, axis=0)
+    canva_oled.line(127,100-bar_height,127,127,1,canva)
+    canva_oled.write('noise: '+str(sum(sensor_values))+' ',0,0,1,canva)
+    canva_oled.write('threshold: '+ str(threshold_value)+ ' ',0,1,1,canva)
     canva_oled.write(str(CPUTemperature())[-17:-1],0,2,1,canva)
-    #TODO
-    #add a line chart here
     canva_oled.frame(oled_screen,canva,last_canva)
    # oled_screen.setCursor(0,0)
    # oled_screen.write("Disco Dino!!")
@@ -167,6 +170,33 @@ def lcd_light():
   #      lcd_color.setRGB(255)
   #  else:
   #      lcd_color.setRGB(0)
+
+
+
+def remap(value, from_low, from_high, to_low, to_high):
+    """
+    Remaps a value from one range to another.
+
+    Args:
+        value: The value to be remapped.
+        from_low: The lower bound of the original range.
+        from_high: The upper bound of the original range.
+        to_low: The lower bound of the target range.
+        to_high: The upper bound of the target range.
+
+    Returns:
+        The remapped value.
+    """
+    # Scale the value from the original range to a value between 0 and 1
+    normalized_value = (value - from_low) / (from_high - from_low)
+    # Scale the normalized value to the target range
+    remapped_value = normalized_value * (to_high - to_low) + to_low
+    return remapped_value
+
+
+
+
+
 
 def bonk():
     global current_hand
