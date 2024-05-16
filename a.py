@@ -13,7 +13,6 @@ import subprocess
 from tornado.wsgi import WSGIContainer
 from tornado.httpserver import HTTPServer
 from tornado.ioloop import IOLoop, PeriodicCallback
-import ip
 from gpiozero import CPUTemperature
 
 app = Flask(__name__)
@@ -27,11 +26,6 @@ numleds = 3
 oled_screen = SH1107G_SSD1327()
 oled_refresh = 0
 current_hand = 0
-address = 'reboot pls'
-try:
-    address = ip.get_ip_address('wlan0')
-except:
-    print('wasd')
 def log_on():
     log.write_to_csv('dino.csv',sum(sensor_values), led_state)
 
@@ -142,9 +136,7 @@ def oled_update():
     oled_refresh = oled_refresh + 1 
     oled_screen.setCursor(rows - 5, 0)
     oled_screen.write('threshold:'  +str(threshold_value))
-    oled_screen.setCursor(rows - 10, 0)
-    oled_screen.write(address)
-    oled_screen.setCursor(rows - 7, 0)
+    oled_screen.setCursor(rows - 8, 0)
     oled_screen.write(str(CPUTemperature())[-17:-1])
 def lcd_light():
     pass
