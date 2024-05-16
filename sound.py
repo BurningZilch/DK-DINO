@@ -8,7 +8,7 @@ grovepi.pinMode(sensor,"INPUT")
 def get_sensor_value():
     try:
         value = 65535
-        while value > 60000:
+        while value > 10000:
             value = grovepi.analogRead(sensor)
         return value
     except IOError:

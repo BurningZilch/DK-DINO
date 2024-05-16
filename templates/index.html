@@ -64,22 +64,23 @@
                 });
 
                 // Update noise level and chart
-    $.get("/get_noise_level", function(data) {
-        $("#noise_level").text(data.noise_level);
+                $.get("/get_noise_level", function(data) {
+                    $("#noise_level").text(data.noise_level);
 
-        // Push data into chart only if the number of values is less than or equal to 60
-        if (chart.data.labels.length <= 60) {
-            chart.data.labels.push(new Date().toLocaleTimeString());
-            chart.data.datasets[0].data.push(data.noise_level);
-        } else {
-            // If more than 20 values, shift the first value out and push the new one
-            chart.data.labels.shift();
-            chart.data.datasets[0].data.shift();
-            chart.data.labels.push(new Date().toLocaleTimeString());
-            chart.data.datasets[0].data.push(data.noise_level);
-        }
-        chart.update();
-    });           }
+                    // Push data into chart only if the number of values is less than or equal to 60
+                    if (chart.data.labels.length <= 60) {
+                        chart.data.labels.push(new Date().toLocaleTimeString());
+                        chart.data.datasets[0].data.push(data.noise_level);
+                    } else {
+                        // If more than 20 values, shift the first value out and push the new one
+                        chart.data.labels.shift();
+                        chart.data.datasets[0].data.shift();
+                        chart.data.labels.push(new Date().toLocaleTimeString());
+                        chart.data.datasets[0].data.push(data.noise_level);
+                    }
+                    chart.update();
+                });
+            }
 
             // Update data every 1 second
             setInterval(updateData, 1000);
@@ -90,14 +91,27 @@
                 $("#threshold_value").text(thresholdValue);
                 $.post("/", { threshold: thresholdValue });
             });
+
+            // Function to calculate average noise value from past 7 values and set threshold
+            $("#average_threshold_btn").click(function() {
+                var sum = 0;
+                var dataLength = chart.data.datasets[0].data.length;
+                var startIdx = Math.max(0, dataLength - 7);
+                for (var i = startIdx; i < dataLength; i++) {
+                    sum += chart.data.datasets[0].data[i];
+                }
+                var avg = Math.round(sum / Math.min(dataLength, 7));
+                $("#threshold_slider").val(avg).change(); // Change slider value and trigger change event
+            });
         });
     </script>
 </head>
 <body>
     <!-- Moved threshold container to the top -->
     <div class="threshold-container">
-        <input type="range" min="0" max="2000" value="1000" class="slider" id="threshold_slider">
+        <input type="range" min="0" max="3000" value="1000" class="slider" id="threshold_slider">
         <p class="threshold-value">Threshold Value: <span id="threshold_value">1000</span></p>
+        <button id="average_threshold_btn">Set Average Threshold</button>
     </div>
     <div class="title-container">
         <h1>LED Status: <span id="led_status">OFF</span></h1>
