@@ -16,6 +16,9 @@ from tornado.ioloop import IOLoop, PeriodicCallback
 from gpiozero import CPUTemperature
 import numpy as np
 
+canva = np.zeros((128,128))
+last_canva = np.zeros((128,128))
+
 app = Flask(__name__)
 threshold_value = 1000 
 sensor_values = [0,0,0,0,0]
@@ -128,10 +131,10 @@ def lcd_update():
   #  lcd.write(str(get_noise_level()))
 
 def oled_update():
-    canva_oled.write('noise: '+str(sum(sensor_values)),0,0)
-    canva_oled.write('threshold: '+ str(threshold_value),0,1)
-    canva_oled.write(str(CPUTemperature())[-17:-1],0,2)
-    canva_oled.frame(oled_screen)
+    canva_oled.write('noise: '+str(sum(sensor_values)),0,0,1,canva)
+    canva_oled.write('threshold: '+ str(threshold_value),0,1,1,canva)
+    canva_oled.write(str(CPUTemperature())[-17:-1],0,2,1,canva)
+    canva_oled.frame(oled_screen,canva,last_canva)
    # oled_screen.setCursor(0,0)
    # oled_screen.write("Disco Dino!!")
    # oled_screen.setCursor(rows - 1, 0)
@@ -161,8 +164,8 @@ if __name__ == '__main__':
     oled_screen.clear()
     oled_screen.backlight(True)
     rows, cols = oled_screen.size()
-    canva_oled.fullscreen_image('logo.bmp')
-    canva_oled.frame(oled_screen)
+    canva_oled.fullscreen_image('logo.bmp',canva)
+    canva_oled.frame(oled_screen,canva, last_canva)
 #    lcd = jhd1802.JHD1802()
     http_server = HTTPServer(WSGIContainer(app))
     http_server.listen(5000, address='0.0.0.0')  # Listen on all available network interfaces
@@ -172,7 +175,7 @@ if __name__ == '__main__':
     callback_log.start() # 0 delay
     callback_led_state = PeriodicCallback(led_state_update, 1000)  # 1000 milliseconds = 1 second
     callback_led_state.start() # 0 delay
-    callback_led_control = PeriodicCallback(led_control, 2000)  # 1000 milliseconds = 1 second
+    callback_led_control = PeriodicCallback(led_control, 1000)  # 1000 milliseconds = 1 second
     callback_led_control.start()
     callback_oled = PeriodicCallback(oled_update,2000)
     callback_oled.start()
