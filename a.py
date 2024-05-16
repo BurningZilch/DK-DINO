@@ -14,6 +14,7 @@ from tornado.wsgi import WSGIContainer
 from tornado.httpserver import HTTPServer
 from tornado.ioloop import IOLoop, PeriodicCallback
 from gpiozero import CPUTemperature
+import numpy as np
 
 app = Flask(__name__)
 threshold_value = 1000 
@@ -24,7 +25,6 @@ led_state3 = "ON"
 last_led_state = "ON"
 numleds = 3
 oled_screen = SH1107G_SSD1327()
-oled_refresh = 0
 current_hand = 0
 def log_on():
     log.write_to_csv('dino.csv',sum(sensor_values), led_state)
@@ -128,16 +128,18 @@ def lcd_update():
   #  lcd.write(str(get_noise_level()))
 
 def oled_update():
-    global oled_refresh
-    oled_screen.setCursor(0,0)
-    oled_screen.write("Disco Dino!!")
-    oled_screen.setCursor(rows - 1, 0)
-    oled_screen.write('noise value:'+str(sum(sensor_values)))
-    oled_refresh = oled_refresh + 1 
-    oled_screen.setCursor(rows - 5, 0)
-    oled_screen.write('threshold:'  +str(threshold_value))
-    oled_screen.setCursor(rows - 8, 0)
-    oled_screen.write(str(CPUTemperature())[-17:-1])
+    canva_oled.write('noise: '+str(sum(sensor_values)),0,0)
+    canva_oled.write('threshold: '+ str(threshold_value),0,1)
+    canva_oled.write(str(CPUTemperature())[-17:-1],0,2)
+    canva_oled.frame(oled_screen)
+   # oled_screen.setCursor(0,0)
+   # oled_screen.write("Disco Dino!!")
+   # oled_screen.setCursor(rows - 1, 0)
+   # oled_screen.write('noise value:'+str(sum(sensor_values)))
+   # oled_screen.setCursor(rows - 5, 0)
+   # oled_screen.write('threshold:'  +str(threshold_value))
+   # oled_screen.setCursor(rows - 8, 0)
+   # oled_screen.write(str(CPUTemperature())[-17:-1])
 def lcd_light():
     pass
   #  if led_state == "ON":
@@ -159,7 +161,8 @@ if __name__ == '__main__':
     oled_screen.clear()
     oled_screen.backlight(True)
     rows, cols = oled_screen.size()
-    oled_screen.write('booting')
+    canva_oled.fullscreen_image('logo.bmp')
+    canva_oled.frame(oled_screen)
 #    lcd = jhd1802.JHD1802()
     http_server = HTTPServer(WSGIContainer(app))
     http_server.listen(5000, address='0.0.0.0')  # Listen on all available network interfaces
