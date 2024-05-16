@@ -1,5 +1,6 @@
 import random
 import led
+import canva_oled
 from oled import SH1107G_SSD1327
 import time
 import sound
