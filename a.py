@@ -5,7 +5,7 @@ from oled import SH1107G_SSD1327
 import time
 import sound
 import time
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, send_from_directory
 import sys
 import RPi.GPIO
 import log
@@ -20,6 +20,7 @@ canva = np.zeros((128,128))
 last_canva = np.zeros((128,128))
 
 app = Flask(__name__)
+app.config['UPLOAD_FOLDER'] = 'uploads'
 threshold_value = 1000 
 sensor_values = [0,0,0,0,0]
 led_state = "ON"
@@ -32,7 +33,7 @@ numleds = 3
 oled_screen = SH1107G_SSD1327()
 current_hand = 0
 def log_on():
-    log.write_to_csv('dino.csv',sum(sensor_values), led_state)
+    log.write_to_csv('uploads/dino.csv',sum(sensor_values), threshold_value)
 
 @app.route('/')
 def index():
@@ -67,6 +68,9 @@ def update_led_state():
     s = get_led_state(threshold_value)
     return jsonify({'led_status': s})
 
+@app.route('/download/<filename>')
+def download_file(filename):
+    return send_from_directory(app.config['UPLOAD_FOLDER'], filename, as_attachment=True)
 
 def lcd_on(): 
     lcd.clear()
@@ -103,8 +107,8 @@ def led_state_update():
     global led_state2
     global led_state3
     led_state = get_led_state(threshold_value)
-    led_state2 = get_led_state(threshold_value + 150)
-    led_state3 = get_led_state(threshold_value + 300)
+    led_state2 = get_led_state(threshold_value + 0.2 * threshold_value)
+    led_state3 = get_led_state(threshold_value + 0.4 * threshold_value)
 
 def led_control():
     global last_led_state
@@ -151,12 +155,14 @@ def oled_update():
     c = get_noise_level()
     bar_height = remap(c,1000,2500, 1, 100)
     canva = np.roll(canva, -1, axis=0)
-    canva_oled.line(127,100-bar_height,127,127,1,canva)
+    canva_oled.line(127,127-bar_height,127,127,1,canva)
     canva_oled.write('noise: '+str(sum(sensor_values))+' ',0,0,1,canva)
     canva_oled.write('threshold: '+ str(threshold_value)+ ' ',0,1,1,canva)
     canva_oled.write(str(CPUTemperature())[-17:-1],0,2,1,canva)
     canva = np.rot90(canva)
+    canva = np.rot90(canva)
     canva_oled.frame(oled_screen,canva,last_canva)
+    canva = np.rot90(canva,k=-1)
     canva = np.rot90(canva,k=-1)
    # oled_screen.setCursor(0,0)
    # oled_screen.write("Disco Dino!!")

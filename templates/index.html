@@ -4,7 +4,6 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
     <title>Shhhhhhhh</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <!-- Include Chart.js -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
     <style>
         canvas {
@@ -21,7 +20,7 @@
             display: flex;
             justify-content: space-between;
             align-items: baseline;
-            margin-bottom: 20px; /* Added margin for spacing */
+            margin-bottom: 20px;
         }
         .threshold-container input {
             width: 80%;
@@ -31,10 +30,22 @@
             flex: 1;
             text-align: right;
         }
+        .download-button {
+            margin-left: 20px;
+        }
+        button {
+            padding: 10px 15px;
+            border: none;
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
     </style>
     <script>
         $(document).ready(function(){
-            // Initialize Chart.js
             var ctx = document.getElementById('noiseChart').getContext('2d');
             var chart = new Chart(ctx, {
                 type: 'line',
@@ -56,23 +67,17 @@
                 }
             });
 
-            // Function to update LED state and noise level in real-time
             function updateData() {
-                // Update LED state
                 $.get("/update_led_state", function(data) {
                     $("#led_status").text(data.led_status);
                 });
 
-                // Update noise level and chart
                 $.get("/get_noise_level", function(data) {
                     $("#noise_level").text(data.noise_level);
-
-                    // Push data into chart only if the number of values is less than or equal to 60
                     if (chart.data.labels.length <= 60) {
                         chart.data.labels.push(new Date().toLocaleTimeString());
                         chart.data.datasets[0].data.push(data.noise_level);
                     } else {
-                        // If more than 20 values, shift the first value out and push the new one
                         chart.data.labels.shift();
                         chart.data.datasets[0].data.shift();
                         chart.data.labels.push(new Date().toLocaleTimeString());
@@ -82,17 +87,14 @@
                 });
             }
 
-            // Update data every 1 second
             setInterval(updateData, 1000);
 
-            // Function to handle threshold slider change
             $("#threshold_slider").change(function() {
                 var thresholdValue = $(this).val();
                 $("#threshold_value").text(thresholdValue);
                 $.post("/", { threshold: thresholdValue });
             });
 
-            // Function to calculate average noise value from past 7 values and set threshold
             $("#average_threshold_btn").click(function() {
                 var sum = 0;
                 var dataLength = chart.data.datasets[0].data.length;
@@ -101,13 +103,12 @@
                     sum += chart.data.datasets[0].data[i];
                 }
                 var avg = Math.round(sum / Math.min(dataLength, 7));
-                $("#threshold_slider").val(avg).change(); // Change slider value and trigger change event
+                $("#threshold_slider").val(avg).change();
             });
         });
     </script>
 </head>
 <body>
-    <!-- Moved threshold container to the top -->
     <div class="threshold-container">
         <input type="range" min="0" max="3000" value="1000" class="slider" id="threshold_slider">
         <p class="threshold-value">Threshold Value: <span id="threshold_value">1000</span></p>
@@ -116,8 +117,10 @@
     <div class="title-container">
         <h1>LED Status: <span id="led_status">OFF</span></h1>
         <h2>Noise Level: <span id="noise_level">0</span></h2>
+        <a href="{{ url_for('download_file', filename='dino.csv') }}" class="download-button">
+            <button>Download noise report</button>
+        </a>
     </div>
-    <!-- Add canvas for the chart -->
     <canvas id="noiseChart" width="400" height="200"></canvas>
 </body>
 </html>
