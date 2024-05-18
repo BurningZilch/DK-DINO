@@ -182,6 +182,7 @@ def lcd_light():
 
 def remap(value, in_min, in_max, out_min, out_max):
     #TODO
+    #by the way, should make a line chart instead of bar chart
    return random.randint(1,99) 
    
 
