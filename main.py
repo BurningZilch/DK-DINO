@@ -31,7 +31,6 @@ last_led_state2 = "OFF"
 last_led_state3 = "OFF"
 numleds = 3
 oled_screen = SH1107G_SSD1327()
-current_hand = 0
 def log_on():
     log.write_to_csv('uploads/dino.csv',sum(sensor_values), threshold_value)
 
@@ -72,30 +71,6 @@ def update_led_state():
 def download_file(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename, as_attachment=True)
 
-def lcd_on(): 
-    lcd.clear()
-    lcd.write("DK DINO ON")
-    time.sleep(2)
-    lcd.clear()
-    i = 0
-    while True:
-        lcd.write(str(i))
-        i = i + 1
-        time.sleep(1)
-        lcd.clear()
-
-def lcd_light_on():
-    lcd_color.setRGB(255)
-    time.sleep(3)
-    l = "OFF"
-    while True:
-        time.sleep(1)
-        if l == "OFF":
-            lcd_color.setRGB(0)
-            l = "a"
-        else:
-            lcd_color.setRGB(255)
-            l ="OFF"
 def sensor_on():
     s = sound.get_sensor_value()
     sensor_values.append(s)
@@ -141,14 +116,6 @@ def led_control():
             led.set_color(0,2)
         last_led_state3 = "OFF"
     
-    
-
-def lcd_update():
-    pass
-  #  lcd.setCursor(0,0)
-  #  lcd.write("disco dino!!")
-  #  lcd.setCursor(1,0)
-  #  lcd.write(str(get_noise_level()))
 
 def oled_update():
     global canva
@@ -164,37 +131,12 @@ def oled_update():
     canva_oled.frame(oled_screen,canva,last_canva)
     canva = np.rot90(canva,k=-1)
     canva = np.rot90(canva,k=-1)
-   # oled_screen.setCursor(0,0)
-   # oled_screen.write("Disco Dino!!")
-   # oled_screen.setCursor(rows - 1, 0)
-   # oled_screen.write('noise value:'+str(sum(sensor_values)))
-   # oled_screen.setCursor(rows - 5, 0)
-   # oled_screen.write('threshold:'  +str(threshold_value))
-   # oled_screen.setCursor(rows - 8, 0)
-   # oled_screen.write(str(CPUTemperature())[-17:-1])
-def lcd_light():
-    pass
-  #  if led_state == "ON":
-  #      lcd_color.setRGB(255)
-  #  else:
-  #      lcd_color.setRGB(0)
-
 
 def remap(value, in_min, in_max, out_min, out_max):
     #TODO
     #by the way, should make a line chart instead of bar chart
    return random.randint(1,99) 
    
-
-
-def bonk():
-    global current_hand
-    if led_state =="ON" and current_hand == 0:
-        hand.setAngle(90)
-        current_hand = 90 
-    else:
-        current_hand = current_hand - 10 
-        hand.setAngle(current_hand)
 
 if __name__ == '__main__':
     led.init()
@@ -205,7 +147,6 @@ if __name__ == '__main__':
     canva_oled.frame(oled_screen,canva, last_canva)
     time.sleep(3)
     canva = np.zeros_like(canva)
-#    lcd = jhd1802.JHD1802()
     http_server = HTTPServer(WSGIContainer(app))
     http_server.listen(5000, address='0.0.0.0')  # Listen on all available network interfaces
     callback_sensor = PeriodicCallback(sensor_on, 200)  # 1000 milliseconds = 1 second
@@ -218,14 +159,6 @@ if __name__ == '__main__':
     callback_led_control.start()
     callback_oled = PeriodicCallback(oled_update,2000)
     callback_oled.start()
-    callback_lcd = PeriodicCallback(lcd_update,2000)
-#    callback_lcd.start()
-    callback_lcdr = PeriodicCallback(lcd_light,2000)
-    callback_lcdr.start()
-    callback_bonk = PeriodicCallback(bonk,1000)
-#    callback_bonk.start()
-
-
 
     IOLoop.instance().start()
 
