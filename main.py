@@ -1,14 +1,14 @@
 import random
-import led
-import canva_oled
+import led #grove chainable led controller
+import canva_oled # grove oled 1.12 V2 with pixel(x,y)
 from oled import SH1107G_SSD1327
 import time
-import sound
+import sound 
 import time
 from flask import Flask, render_template, request, jsonify, send_from_directory
 import sys
 import RPi.GPIO
-import log
+import log # csv file 
 import subprocess
 from tornado.wsgi import WSGIContainer
 from tornado.httpserver import HTTPServer
@@ -41,7 +41,11 @@ def index():
 @app.route('/', methods=['POST'])
 def set_threshold():
     global threshold_value
-    threshold_value = int(request.form['threshold'])
+    new_threshold_value = int(request.form['threshold'])
+    #TODO the old data on oled won't update while update threshold
+    ratio = float (threshold_value) / new_threshold_value
+    oled_chart_t_update(ratio)
+    threshold_value = new_threshold_value
     return jsonify({'success': True})
 
 def get_noise_level():
@@ -120,23 +124,45 @@ def led_control():
 def oled_update():
     global canva
     c = get_noise_level()
-    bar_height = remap(c,1000,2500, 1, 100)
+    bar_height = remap(c,threshold_value * 2,0, 100, 1)
     canva = np.roll(canva, -1, axis=0)
     canva_oled.line(127,127-bar_height,127,127,1,canva)
     canva_oled.write('noise: '+str(sum(sensor_values))+' ',0,0,1,canva)
     canva_oled.write('threshold: '+ str(threshold_value)+ ' ',0,1,1,canva)
     canva_oled.write(str(CPUTemperature())[-17:-1],0,2,1,canva)
     canva = np.rot90(canva)
-    canva = np.rot90(canva)
+    canva = np.rot90(canva) # rotate 180 to be ready to draw 
     canva_oled.frame(oled_screen,canva,last_canva)
     canva = np.rot90(canva,k=-1)
-    canva = np.rot90(canva,k=-1)
+    canva = np.rot90(canva,k=-1)# rotate back
 
-def remap(value, in_min, in_max, out_min, out_max):
-    #TODO
-    #by the way, should make a line chart instead of bar chart
-   return random.randint(1,99) 
-   
+  
+def remap(value, maxInput, minInput, maxOutput, minOutput):
+
+    value = maxInput if value > maxInput else value
+    value = minInput if value < minInput else value
+
+    inputSpan = maxInput - minInput
+    outputSpan = maxOutput - minOutput
+
+    scaledThrust = float(value - minInput) / float(inputSpan)
+
+    i =  minOutput + (scaledThrust * outputSpan)
+    return int(i)
+
+def oled_chart_t_update(ratio):
+    global canva
+    for i in range(128):
+        h = find_line_height(i)
+        if h != 0 :
+            canva_oled.line(i,24,i,127,0,canva)
+            canva_oled.line(i,max(24,int((127)- h*ratio)),i,127,1,canva)
+
+def find_line_height(x):
+    for y in range(128):
+        if canva[x,127 - y] != 1:
+            return y
+            
 
 if __name__ == '__main__':
     led.init()
