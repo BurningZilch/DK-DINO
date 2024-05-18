@@ -51,12 +51,23 @@
                 type: 'line',
                 data: {
                     labels: [],
-                    datasets: [{
-                        label: 'Noise Level',
-                        data: [],
-                        borderColor: 'rgb(75, 192, 192)',
-                        tension: 0.1
-                    }]
+                    datasets: [
+                        {
+                            label: 'Noise Level',
+                            data: [],
+                            borderColor: 'rgb(75, 192, 192)',
+                            tension: 0.1
+                        },
+                        {
+                            label: 'Threshold',
+                            data: [],
+                            borderColor: 'rgb(255, 99, 132)',
+                            borderDash: [10, 5],
+                            fill: false,
+                            pointRadius: 0,
+                            borderWidth: 1,
+                        }
+                    ]
                 },
                 options: {
                     scales: {
@@ -83,8 +94,15 @@
                         chart.data.labels.push(new Date().toLocaleTimeString());
                         chart.data.datasets[0].data.push(data.noise_level);
                     }
+                    updateThresholdLine(chart);
                     chart.update();
                 });
+            }
+
+            function updateThresholdLine(chart) {
+                var thresholdValue = $("#threshold_slider").val();
+                var dataLength = chart.data.labels.length;
+                chart.data.datasets[1].data = Array(dataLength).fill(thresholdValue);
             }
 
             setInterval(updateData, 1000);
@@ -93,6 +111,8 @@
                 var thresholdValue = $(this).val();
                 $("#threshold_value").text(thresholdValue);
                 $.post("/", { threshold: thresholdValue });
+                updateThresholdLine(chart);
+                chart.update();
             });
 
             $("#average_threshold_btn").click(function() {
