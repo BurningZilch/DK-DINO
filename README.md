@@ -13,7 +13,7 @@ Our Project involved creating a dino-shaped noise monitor using python 2.7 a Ras
 10. git clone https://github.com/BurningZilch/DK-DINO
 11. plug in oled into any i2c port, sound snesor in A0, chainable leds in D3
 12. cd DK-DINO | python main.py
-13. go to the raspberrypi.local:5000
+13. go to the raspberrypidk.local:5000 (change the address name to host name you give to your pi)
 ![Screenshot 2024-05-18 144720](https://github.com/BurningZilch/DK-DINO/assets/55424397/9e184c40-e9a8-4270-bd81-55101db472bb)
 ![77A3DDDA-A5D0-4C1F-92CB-06EF9CA1E9CE](https://github.com/BurningZilch/DK-DINO/assets/55424397/2a92a36d-1388-4a4e-a0dd-d0c7f9b6267a)
 ![IMG_20240518_170019378](https://github.com/BurningZilch/DK-DINO/assets/55424397/d2fad827-cdc7-43c4-ae99-1ab6d0f69d37)
