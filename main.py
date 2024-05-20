@@ -130,10 +130,12 @@ def oled_update():
     canva_oled.write('noise: '+str(sum(sensor_values))+' ',0,0,1,canva)
     canva_oled.write('threshold: '+ str(threshold_value)+ ' ',0,1,1,canva)
     canva_oled.write(str(CPUTemperature())[-17:-1],0,2,1,canva)
-    canva = np.rot90(canva)
+    canva = np.rot90(canva) # rotate 180 to be ready to draw 
+    canva = np.rot90(canva) # rotate 180 to be ready to draw 
     canva = np.rot90(canva) # rotate 180 to be ready to draw 
     canva_oled.frame(oled_screen,canva,last_canva)
-    canva = np.rot90(canva,k=-1)
+    canva = np.rot90(canva,k=-1)# rotate back
+    canva = np.rot90(canva,k=-1)# rotate back
     canva = np.rot90(canva,k=-1)# rotate back
 
   
