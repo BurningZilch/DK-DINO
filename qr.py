@@ -1,7 +1,14 @@
 import subprocess
+import time
 import re
 import qrcode
 from PIL import Image
+import oled
+import canva_oled
+import numpy as np
+
+matrixs = np.zeros((128,128))
+last_matrixs = np.zeros((128,128))
 
 def convert_to_bw_and_resize(input_image_path, output_image_path, target_size):
     # Open the input image
@@ -78,4 +85,9 @@ if __name__ == "__main__":
             generate_wifi_qr(ssid, security, password)
             print("Wi-Fi QR code generated and saved as wifi_qr.png")
             convert_to_bw_and_resize('wifi_qr.png','wifi_qr.bmp',(128,128))
-
+            a = oled.SH1107G_SSD1327()
+            a.backlight(False)
+            time.sleep(1)
+            a.backlight(True)
+            canva_oled.fullscreen_image('/home/pi/DK-DINO/wifi_qr.bmp', matrixs)
+            canva_oled.frame(a,matrixs,last_matrixs)
