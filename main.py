@@ -1,4 +1,5 @@
 import random
+import buzzer
 import led #grove chainable led controller
 import canva_oled # grove oled 1.12 V2 with pixel(x,y)
 from oled import SH1107G_SSD1327
@@ -19,6 +20,10 @@ import numpy as np
 canva = np.zeros((128,128))
 last_canva = np.zeros((128,128))
 
+buzzer_pin = 25
+RPi.GPIO.setmode(RPi.GPIO.BCM)
+RPi.GPIO.setup(buzzer_pin,RPi.GPIO.OUT)
+happy = 1
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'uploads'
 threshold_value = 1000 
@@ -42,7 +47,6 @@ def index():
 def set_threshold():
     global threshold_value
     new_threshold_value = int(request.form['threshold'])
-    #TODO the old data on oled won't update while update threshold
     ratio = float (threshold_value) / new_threshold_value
     oled_chart_t_update(ratio)
     threshold_value = new_threshold_value
@@ -76,18 +80,31 @@ def download_file(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename, as_attachment=True)
 
 def sensor_on():
-    s = sound.get_sensor_value()
-    sensor_values.append(s)
-    sensor_values.pop(0)
-    print(sum(sensor_values))
+    if happy < 5:
+        s = sound.get_sensor_value()
+        sensor_values.append(s)
+        sensor_values.pop(0)
+        print(sum(sensor_values))
 
 def led_state_update():
     global led_state
     global led_state2
     global led_state3
+    global happy
     led_state = get_led_state(threshold_value)
     led_state2 = get_led_state(threshold_value + 0.2 * threshold_value)
     led_state3 = get_led_state(threshold_value + 0.4 * threshold_value)
+    if led_state == 'ON':
+        happy = happy + 1
+    if led_state2 == 'ON':
+        happy = happy + 1
+    if led_state3 == 'ON':
+        happy = happy + 1
+    if happy > 10:
+        happy = 0
+        buzzer.buzz(500,0.3,buzzer_pin)
+        buzzer.buzz(300,0.2,buzzer_pin)
+    happy = happy - 1
 
 def led_control():
     global last_led_state
@@ -109,8 +126,6 @@ def led_control():
         if last_led_state2 == "ON":
             led.set_color(0,1)
         last_led_state2 = "OFF"
-    
-    
     if led_state3 == "ON":
         if last_led_state3 == "OFF":
             led.set_color(4,2)
@@ -181,9 +196,9 @@ if __name__ == '__main__':
     callback_sensor.start() # 0 delay
     callback_log = PeriodicCallback(log_on, 2000)  # 1000 milliseconds = 1 second
     callback_log.start() # 0 delay
-    callback_led_state = PeriodicCallback(led_state_update, 1000)  # 1000 milliseconds = 1 second
+    callback_led_state = PeriodicCallback(led_state_update, 400)  # 1000 milliseconds = 1 second
     callback_led_state.start() # 0 delay
-    callback_led_control = PeriodicCallback(led_control, 500)  # 1000 milliseconds = 1 second
+    callback_led_control = PeriodicCallback(led_control, 400)  # 1000 milliseconds = 1 second
     callback_led_control.start()
     callback_oled = PeriodicCallback(oled_update,2000)
     callback_oled.start()

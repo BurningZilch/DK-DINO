@@ -2,11 +2,11 @@ import time
 import grovepi
 import RPi.GPIO as GPIO
 import smbus
-buzzer_pin = 25 
+buzzer = 25 
 GPIO.setmode(GPIO.BCM)
-GPIO.setup(buzzer_pin,GPIO.OUT)
+GPIO.setup(buzzer,GPIO.OUT)
 
-def buzz(frequency, length):     #create the function "buzz" and feed it the pitch and duration)
+def buzz(frequency, length,buzzer_pin):     #create the function "buzz" and feed it the pitch and duration)
 
     if(frequency==0):
         time.sleep(length)
@@ -21,6 +21,6 @@ def buzz(frequency, length):     #create the function "buzz" and feed it the pit
         GPIO.output(buzzer_pin, False)          #set pin 27 to low
         time.sleep(delayValue)          #wait with pin 27 low
 
-buzz(500, 0.3)
-buzz(300, 0.2)
+buzz(500, 0.3,buzzer)
+buzz(300, 0.2,buzzer)
 GPIO.cleanup()
