@@ -3,7 +3,6 @@ import grovepi
 import RPi.GPIO as GPIO
 import smbus
 buzzer_pin = 25 
-GPIO.cleanup()
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(buzzer_pin,GPIO.OUT)
 
@@ -22,4 +21,6 @@ def buzz(frequency, length):     #create the function "buzz" and feed it the pit
         GPIO.output(buzzer_pin, False)          #set pin 27 to low
         time.sleep(delayValue)          #wait with pin 27 low
 
-buzz(100, 0.4)
+buzz(500, 0.3)
+buzz(300, 0.2)
+GPIO.cleanup()
