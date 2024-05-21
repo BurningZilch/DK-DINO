@@ -26,7 +26,7 @@ def convert_to_bw_and_resize(input_image_path, output_image_path, target_size):
 
 def get_current_wifi_ssid():
     try:
-        time.sleep(10)
+        time.sleep(10) # wait for the machine to connect to wifi
         print('ok')
         result = subprocess.check_output(["iwgetid", "-r"])
         ssid = result.strip()
