@@ -26,6 +26,8 @@ def convert_to_bw_and_resize(input_image_path, output_image_path, target_size):
 
 def get_current_wifi_ssid():
     try:
+        time.sleep(10)
+        print('ok')
         result = subprocess.check_output(["iwgetid", "-r"])
         ssid = result.strip()
         print(ssid)
@@ -73,6 +75,7 @@ def generate_wifi_qr(ssid, security, password):
     img.save("wifi_qr.png")
 
 if __name__ == "__main__":
+    print('what')
     ssid = get_current_wifi_ssid()
     if ssid is None:
         print("Could not determine the current Wi-Fi SSID.")
