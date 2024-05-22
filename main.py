@@ -196,7 +196,7 @@ if __name__ == '__main__':
     oled_screen.clear()
     oled_screen.backlight(True)
     rows, cols = oled_screen.size()
-    canva_oled.fullscreen_image('logo.bmp',canva)
+    canva_oled.fullscreen_image('dk_dino_logo.bmp',canva)
     canva_oled.frame(oled_screen,canva, last_canva)
     time.sleep(3)
     canva = np.zeros_like(canva)

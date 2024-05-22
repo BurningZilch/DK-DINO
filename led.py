@@ -55,3 +55,5 @@ if __name__ == '__main__':
         set_all(s)
         s = s - 1
         time.sleep(1)
+        if s == 0:
+            s = 8
