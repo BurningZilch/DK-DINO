@@ -80,7 +80,7 @@ def download_file(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename, as_attachment=True)
 
 def sensor_on():
-    if happy < 10:
+    if happy < 7:
         s = sound.get_sensor_value()
         sensor_values.append(s)
         sensor_values.pop(0)
@@ -104,7 +104,7 @@ def led_state_update():
         buzzer.buzz(500,0.3,buzzer_pin)
         buzzer.buzz(300,0.2,buzzer_pin)
         happy = 0
-    happy = happy - 1
+    happy = max(happy - 1,0)
 
 def led_control():
     global last_led_state
