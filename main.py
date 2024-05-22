@@ -21,8 +21,6 @@ canva = np.zeros((128,128))
 last_canva = np.zeros((128,128))
 
 buzzer_pin = 25
-RPi.GPIO.setmode(RPi.GPIO.BCM)
-RPi.GPIO.setup(buzzer_pin,RPi.GPIO.OUT)
 happy = 1
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'uploads'
@@ -36,6 +34,15 @@ last_led_state2 = "OFF"
 last_led_state3 = "OFF"
 numleds = 3
 oled_screen = SH1107G_SSD1327()
+
+
+
+@app.route('/accept', methods=['POST'])
+def accept_terms():
+    # Here you can log the user's acceptance or perform other actions
+    return redirect('http://www.google.com')  # Redirect to a specific page after acceptance
+
+
 def log_on():
     log.write_to_csv('uploads/dino.csv',sum(sensor_values), threshold_value)
 
@@ -101,8 +108,11 @@ def led_state_update():
     if led_state3 == 'ON':
         happy = happy + 1
     if happy > 10:
+        RPi.GPIO.setmode(RPi.GPIO.BCM)
+        RPi.GPIO.setup(buzzer_pin,RPi.GPIO.OUT)
         buzzer.buzz(500,0.3,buzzer_pin)
         buzzer.buzz(300,0.2,buzzer_pin)
+        RPi.GPIO.cleanup()
         happy = 0
     happy = max(happy - 1,0)
 
