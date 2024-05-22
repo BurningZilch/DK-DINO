@@ -78,7 +78,7 @@ def generate_wifi_qr(ssid, security, password):
 if __name__ == "__main__":
     a = oled.SH1107G_SSD1327()
     canva_oled.fullscreen_image('dk_dino_logo.bmp',matrixs)
-    canva = np.zeros_like(canva)
+    matrixs = np.zeros_like(matrixs)
     canva_oled.frame(a,matrixs,last_matrixs)
     print('what')
     ssid = get_current_wifi_ssid()
