@@ -207,9 +207,9 @@ if __name__ == '__main__':
     callback_sensor.start() # 0 delay
     callback_log = PeriodicCallback(log_on, 2000)  # 1000 milliseconds = 1 second
     callback_log.start() # 0 delay
-    callback_led_state = PeriodicCallback(led_state_update, 400)  # 1000 milliseconds = 1 second
+    callback_led_state = PeriodicCallback(led_state_update, 600)  # 1000 milliseconds = 1 second
     callback_led_state.start() # 0 delay
-    callback_led_control = PeriodicCallback(led_control, 400)  # 1000 milliseconds = 1 second
+    callback_led_control = PeriodicCallback(led_control, 600)  # 1000 milliseconds = 1 second
     callback_led_control.start()
     callback_oled = PeriodicCallback(oled_update,2000)
     callback_oled.start()

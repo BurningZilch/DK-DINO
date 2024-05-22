@@ -76,6 +76,9 @@ def generate_wifi_qr(ssid, security, password):
     img.save("wifi_qr.png")
 
 if __name__ == "__main__":
+    a = oled.SH1107G_SSD1327()
+    canva_oled.fullscreen_image('dk_dino_logo.bmp',matrixs)
+    canva_oled.frame(a,matrixs,last_matrixs)
     print('what')
     ssid = get_current_wifi_ssid()
     if ssid is None:
@@ -89,7 +92,6 @@ if __name__ == "__main__":
             generate_wifi_qr(ssid, security, password)
             print("Wi-Fi QR code generated and saved as wifi_qr.png")
             convert_to_bw_and_resize('wifi_qr.png','wifi_qr.bmp',(128,128))
-            a = oled.SH1107G_SSD1327()
             a.backlight(False)
             time.sleep(1)
             a.backlight(True)
