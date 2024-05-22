@@ -3,7 +3,7 @@ Our Project involved creating a dino-shaped noise monitor using python 2.7 a Ras
 # Headless Install Guide
 1. Download and flash Buster system into a sd card from https://downloads.raspberrypi.org/raspios_armhf/images/raspios_armhf-2021-05-28/2021-05-07-raspios-buster-armhf.zip, remember setup the ssh for the pi
 2. SSH into the raspberry pi, enable vnc, i2c ...... update and upgrade the software ...... install vim ...... etc
-3.  sudo pip install pycparser ; sudo pip install python-periphery ; sudo pip sintall tornado
+3.  sudo pip install pycparser ; sudo pip install python-periphery ; sudo pip intall tornado
 4. sudo curl -kL dexterindustries.com/update_grovepi | bash
 5. git clone https://github.com/DexterInd/GrovePi.git ; cd GrovePi ; cd Firmware ; sudo ./firmware_update.sh
 6. git clone https://github.com/Seeed-Studio/grove.py ; cd grove.py ; sudo ./install.sh
