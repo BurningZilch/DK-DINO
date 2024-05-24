@@ -6,8 +6,8 @@ Our Project involved creating a dino-shaped noise monitor using python 2.7 a Ras
 3. sudo apt update ; sudo apt upgrade ; sudo apt install vim
 4.  sudo pip install pycparser ; sudo pip install python-periphery ; sudo pip intall tornado ; sudo pip install qrcode 
 5. sudo curl -kL dexterindustries.com/update_grovepi | bash
-6. git clone https://github.com/DexterInd/GrovePi.git ; cd GrovePi ; cd Firmware ; sudo ./firmware_update.sh
-7. git clone https://github.com/Seeed-Studio/grove.py ; cd grove.py ; sudo ./install.sh
+6. git clone https://github.com/DexterInd/GrovePi.git ; cd GrovePi ; cd Firmware ; sudo ./firmware_update.sh ; cd ~
+7. git clone https://github.com/Seeed-Studio/grove.py ; cd grove.py ; sudo ./install.sh ; cd ~
 8. git clone https://github.com/BurningZilch/DK-DINO
 9. plug in oled into any i2c port, sound snesor in A0, chainable leds in D3
 10. cd DK-DINO ; python main.py
