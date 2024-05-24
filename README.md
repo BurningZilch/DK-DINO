@@ -3,7 +3,7 @@ Our Project involved creating a dino-shaped noise monitor using python 2.7 a Ras
 # Headless Install Guide
 
 1. Download and flash Buster system into a sd card from https://downloads.raspberrypi.org/raspios_armhf/images/raspios_armhf-2021-05-28/2021-05-07-raspios-buster-armhf.zip, remember setup the ssh for the pi
-2. ##Copy and run this in the pi's terminal:
+2. Copy and run this in the pi's terminal:
    sudo apt update -o APT::Get::List-Cleanup="0" -o APT::Get::Changelog="none" ; sudo apt upgrade -o APT::Get::Changelog="none" -y ; sudo apt install vim -y ; sudo pip install pycparser python-periphery tornado qrcode ; sudo curl -kL dexterindustries.com/update_grovepi | bash ; git clone https://github.com/DexterInd/GrovePi.git ; cd GrovePi/Firmware ; sudo ./firmware_update.sh ; cd ~ ; git clone https://github.com/Seeed-Studio/grove.py ; cd grove.py ; sudo ./install.sh ; cd ~ ; git clone https://github.com/BurningZilch/DK-DINO
 
 4. cd DK-DINO ; python main.py
