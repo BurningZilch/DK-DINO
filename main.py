@@ -193,6 +193,7 @@ def find_line_height(x):
 
 if __name__ == '__main__':
     led.init()
+    led.set_all(0)
     oled_screen.clear()
     oled_screen.backlight(True)
     rows, cols = oled_screen.size()

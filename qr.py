@@ -1,4 +1,5 @@
 import subprocess
+import led
 import time
 import re
 import qrcode
@@ -77,6 +78,9 @@ def generate_wifi_qr(ssid, security, password):
 
 if __name__ == "__main__":
     a = oled.SH1107G_SSD1327()
+    print('led')
+    led.init()
+    led.set_all(3)
     canva_oled.fullscreen_image('dk_dino_logo.bmp',matrixs)
     matrixs = np.zeros_like(matrixs)
     canva_oled.frame(a,matrixs,last_matrixs)
