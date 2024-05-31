@@ -14,9 +14,12 @@ Grove Pi+ with associated sensors and LEDs
 ## Setup
 
 1.Download and flash Buster system into a sd card from https://downloads.raspberrypi.org/raspios_armhf/images/raspios_armhf-2021-05-28/2021-05-07-raspios-buster-armhf.zip
+
 2. Copy and run this in the pi's terminal:
    sudo apt update -o APT::Get::List-Cleanup="0" -o APT::Get::Changelog="none" ; sudo apt upgrade -o APT::Get::Changelog="none" -y ; sudo apt install vim -y ; sudo pip install pycparser python-periphery tornado qrcode ; sudo curl -kL dexterindustries.com/update_grovepi | bash ;  cd ~ ; git clone https://github.com/Seeed-Studio/grove.py ; cd grove.py ; sudo ./install.sh ; cd ~ ; git clone https://github.com/BurningZilch/DK-DINO
+   
 3. cd DK-DINO ; python main.py
+   
 4. go to the raspberrypidk.local:5000 on your phone or other device on local network (change the address name to host name you give to your pi)
 
 # Note on Unfinished Features
